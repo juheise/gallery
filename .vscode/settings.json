@@ -1,0 +1,8 @@
+{
+    "python.testing.pytestArgs": [
+        "test"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "python.pythonPath": "/home/juheise/.cache/pypoetry/virtualenvs/gallery-N6VShuik-py3.9/bin/python"
+}
