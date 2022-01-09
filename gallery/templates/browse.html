@@ -1,0 +1,14 @@
+{% extends "page_template.html" %}
+{% block title %}Übersicht{% endblock %}
+{% block content %}
+    {% for section in sections %}
+    <h1>{{ section["headline"] }}</h1>
+    <div class="thumbnails">
+        {% for image in section.thumbnails %}
+            <a href="{{ image['details'] }}">
+                <img src="{{ image['uri'] }}" class="thumbnail" />
+            </a>
+        {% endfor %}
+    </div>
+    {% endfor %}
+{% endblock %}
