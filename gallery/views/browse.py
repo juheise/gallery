@@ -1,20 +1,23 @@
 from flask import url_for
 
+import db.persistence as db
+
+
+def process_thumbnail(img):
+    return {
+        "uri": url_for("static", filename=f"thumbnails/{img['thumbnail']}"),
+        "details": url_for("static", filename=f"pictures/{img['file_name']}")
+    }
+
 
 def fetch_thumbnails():
+
+    images = db.search()
+    entries = [process_thumbnail(img) for img in images]
+
     return [
         {
-            "headline": "1. Januar",
-            "thumbnails": [
-                {
-                    "uri": url_for('static', filename='pictures/20201223_130902_001_thumb128.jpg'),
-                    "details": url_for("static", filename="pictures/20201223_130902_001.jpg")
-                },
-                {
-                    "uri": url_for('static', filename='pictures/20201223_130902_001_thumb128.jpg'),
-                    "details": url_for("static", filename="pictures/20201223_130902_001.jpg")
-                }
-            ]
+            "headline": f"{len(images)} Bilder",
+            "thumbnails": entries
         },
-        
     ]
