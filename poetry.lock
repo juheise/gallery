@@ -255,7 +255,7 @@ watchdog = ["watchdog"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "428abab6436de32118a731a46799e422500881eb214711f99d2f9d654cabf495"
+content-hash = "ebe6669eb627524e4e8945fe5a219866760d1a3a8117b595cf2992dd5de74490"
 
 [metadata.files]
 appdirs = [

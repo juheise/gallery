@@ -38,3 +38,16 @@ def search():
     
     return mapped
     
+
+def load(uuid: str):
+    with psycopg2.connect(**DB_CONNECTION) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("select * from images where uuid=%s", (uuid,))
+            result = cursor.fetchone()
+            keys = [col.name for col in cursor.description]
+        
+    obj = {}
+    for i in range(len(keys)):
+        obj[keys[i]] = result[i]
+    
+    return obj

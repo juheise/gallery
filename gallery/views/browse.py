@@ -4,9 +4,12 @@ import db.persistence as db
 
 
 def process_thumbnail(img):
+    
+    uuid = img["uuid"]
+
     return {
-        "uri": url_for("static", filename=f"thumbnails/{img['thumbnail']}"),
-        "details": url_for("static", filename=f"pictures/{img['file_name']}")
+        "uri": url_for("thumbnail", uuid=uuid),
+        "details": url_for("picture", uuid=uuid)
     }
 
 

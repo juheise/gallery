@@ -1,9 +1,11 @@
 import os
 from time import strftime
 import uuid
+import typing as t
 
 from PIL import Image
 import exif
+from fs.base import FS
 
 import db.persistence as db
 
@@ -29,7 +31,10 @@ EXIF_CONVERT = {
 }
 
 
-def thumbnail_filename(in_path, suffix):
+def thumbnail_filename(in_path: str, suffix: str) -> str:
+    """
+    Extract file name from given path and convert into filename for thumbnail image.
+    """
     file_name = os.path.basename(in_path)
     parts = file_name.split(".")
     joined = ".".join(parts[:-1])
@@ -44,7 +49,7 @@ def create_thumbnail(in_path, out_path, size):
         cropped.save(out_path, "JPEG")
 
 
-def create_entry(in_path, thumbnail_path):
+def create_entry(in_path: str, thumbnail_path: str):
     return {
         "abspath": in_path,
         "file_name": os.path.basename(in_path),
@@ -53,12 +58,10 @@ def create_entry(in_path, thumbnail_path):
     }
 
 
-def add_meta_data(entry):
+def add_meta_data(fs: FS, path: str, entry: t.Dict[str, t.Any]):
 
-    with open(entry["abspath"], 'rb') as f:
+    with fs.open(path, 'rb') as f:
         img = exif.Image(f)
-
-    # todo: read non-exif metadata
 
     if not img.has_exif:
         return
@@ -73,14 +76,14 @@ def add_meta_data(entry):
             print(f"warning: cannot read {key} from {entry['abspath']} due to: {e.__class__.__name__}: {e}")
 
 
-def import_image(in_path, thumbnail_dir, thumbnail_size=128):
+def import_image(source_fs: FS, in_path: str, thumbnail_fs: FS, thumbnail_size=128):
     
-    thumb_dir = "gallery/static/thumbnails"
     thumb_file = thumbnail_filename(in_path, "jpg")
-    create_thumbnail(in_path, os.path.join(thumb_dir, thumb_file), thumbnail_size)
+    abspath = source_fs.getospath(in_path).decode("utf-8")
+    abspath_thumb = thumbnail_fs.getospath(thumb_file).decode("utf-8")
 
-    entry = create_entry(in_path, thumb_file)
-    add_meta_data(entry)
+    create_thumbnail(abspath, abspath_thumb, thumbnail_size)
+    entry = create_entry(abspath, abspath_thumb)
+    add_meta_data(source_fs, in_path, entry)
     db.insert(entry)
-
-# todo write cli for ingest whole directory....
+    
