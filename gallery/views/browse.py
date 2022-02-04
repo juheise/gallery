@@ -1,6 +1,22 @@
+from datetime import datetime
 from flask import url_for
 
 import db.persistence as db
+
+MONTH_NAMES = {
+    1: "Januar",
+    2: "Februar",
+    3: "März",
+    4: "April",
+    5: "Mai",
+    6: "Juni",
+    7: "Juli",
+    8: "August",
+    9: "September",
+    10: "Oktober",
+    11: "November",
+    12: "Dezember"
+}
 
 
 def process_thumbnail(img):
@@ -13,14 +29,21 @@ def process_thumbnail(img):
     }
 
 
+def month_headline(dt):
+    return f"{MONTH_NAMES[dt.month]} {dt.year}"
+
+
 def fetch_thumbnails():
 
     images = db.search()
-    entries = [process_thumbnail(img) for img in images]
+    sections = []
+    current_month = None
 
-    return [
-        {
-            "headline": f"{len(images)} Bilder",
-            "thumbnails": entries
-        },
-    ]
+    for img in images:
+        this_month = img["shot_datetime"].month
+        if this_month != current_month:
+            sections.append({"headline": month_headline(img["shot_datetime"]), "thumbnails": []})
+            current_month = this_month
+        sections[-1]["thumbnails"].append(process_thumbnail(img))
+
+    return sections

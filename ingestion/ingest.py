@@ -1,5 +1,4 @@
 import os
-from time import strftime
 import uuid
 import typing as t
 
@@ -8,6 +7,12 @@ import exif
 from fs.base import FS
 
 import db.persistence as db
+
+
+def convert_exif_date_to_sql_date(dt):
+    s = dt.split(" ")
+    new_date = s[0].replace(":", "-")
+    return f"{new_date} {s[1]}"
 
 
 INCLUDED_EXIF_ATTRIBUTES = [
@@ -27,7 +32,7 @@ EXIF_RENAME = {
 }
 
 EXIF_CONVERT = {
-    "datetime": lambda dt: strftime("dddd-mm-dd HH:MM:ss", dt)
+    "datetime": convert_exif_date_to_sql_date
 }
 
 
@@ -86,4 +91,3 @@ def import_image(source_fs: FS, in_path: str, thumbnail_fs: FS, thumbnail_size=1
     entry = create_entry(abspath, abspath_thumb)
     add_meta_data(source_fs, in_path, entry)
     db.insert(entry)
-    

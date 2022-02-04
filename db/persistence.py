@@ -21,11 +21,11 @@ def insert(entry):
             connection.commit()
 
 
-def search():
+def search(order_by="shot_datetime", order="desc"):
     with psycopg2.connect(**DB_CONNECTION) as connection:
         with connection.cursor() as cursor:
 
-            cursor.execute("select * from images")
+            cursor.execute(f"select * from images order by {order_by} {order}")
             result = cursor.fetchall()
             keys = [col.name for col in cursor.description]
 
