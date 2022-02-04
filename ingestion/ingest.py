@@ -1,3 +1,4 @@
+import hashlib
 import os
 import uuid
 import typing as t
@@ -81,6 +82,16 @@ def add_meta_data(fs: FS, path: str, entry: t.Dict[str, t.Any]):
             print(f"warning: cannot read {key} from {entry['abspath']} due to: {e.__class__.__name__}: {e}")
 
 
+def add_hash(fs: FS, path: str, entry: t.Dict[str, t.Any]) -> None:
+    with fs.openbin(path) as f:
+        data = f.read()
+    sha = hashlib.sha256()
+    sha.update(data)
+    sha.digest()
+    entry["hash_hex"] = sha.hexdigest()
+    entry["hash_algo"] = "sha256"
+
+
 def import_image(source_fs: FS, in_path: str, thumbnail_fs: FS, thumbnail_size=128):
     
     thumb_file = thumbnail_filename(in_path, "jpg")
@@ -89,5 +100,6 @@ def import_image(source_fs: FS, in_path: str, thumbnail_fs: FS, thumbnail_size=1
 
     create_thumbnail(abspath, abspath_thumb, thumbnail_size)
     entry = create_entry(abspath, abspath_thumb)
+    add_hash(source_fs, in_path, entry)
     add_meta_data(source_fs, in_path, entry)
     db.insert(entry)

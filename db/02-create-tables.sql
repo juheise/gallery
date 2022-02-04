@@ -7,5 +7,7 @@ create table if not exists images (
     width_px integer not null,
     height_px integer not null,
     shot_datetime timestamp without time zone,
-    camera text
+    camera text,
+    hash_hex text unique,
+    hash_algo text
 );
