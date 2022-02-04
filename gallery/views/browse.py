@@ -29,10 +29,6 @@ def process_thumbnail(img):
     }
 
 
-def month_headline(dt):
-    return f"{MONTH_NAMES[dt.month]} {dt.year}"
-
-
 def fetch_thumbnails():
 
     images = db.search()
@@ -40,9 +36,10 @@ def fetch_thumbnails():
     current_month = None
 
     for img in images:
-        this_month = img["shot_datetime"].month
+        dt = img["shot_datetime"]
+        this_month = dt.month
         if this_month != current_month:
-            sections.append({"headline": month_headline(img["shot_datetime"]), "thumbnails": []})
+            sections.append({"headline": f"{MONTH_NAMES[dt.month]} {dt.year}", "thumbnails": []})
             current_month = this_month
         sections[-1]["thumbnails"].append(process_thumbnail(img))
 
