@@ -1,3 +1,11 @@
 #footer {
     margin-top: 2em;
 }
+
+.thumbnail {
+    margin-bottom: 3px;
+}
+
+.thumbnail-href {
+    text-decoration: none;
+}

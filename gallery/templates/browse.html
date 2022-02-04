@@ -2,11 +2,11 @@
 {% block title %}Übersicht{% endblock %}
 {% block content %}
     {% for section in sections %}
-    <h1>{{ section["headline"] }}</h1>
-    <div class="thumbnails">
+    <div class="container">
+        <h1>{{ section["headline"] }}</h1>
         {% for image in section.thumbnails %}
-            <a href="{{ image['details'] }}">
-                <img src="{{ image['uri'] }}" class="thumbnail" />
+            <a href="{{ image['details'] }}" class="thumbnail-href">
+                <img src="{{ image['uri'] }}" class="thumbnail" width="128" height="128"/>
             </a>
         {% endfor %}
     </div>
