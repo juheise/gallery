@@ -6,7 +6,7 @@
         <h1>{{ section["headline"] }}</h1>
         {% for image in section.thumbnails %}
             <a href="{{ image['details'] }}" class="thumbnail-href">
-                <img src="{{ image['uri'] }}" class="thumbnail" width="128" height="128"/>
+                <img class="rounded thumbnail" src="{{ image['uri'] }}" width="128" height="128"/>
             </a>
         {% endfor %}
     </div>

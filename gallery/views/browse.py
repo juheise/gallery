@@ -25,7 +25,7 @@ def process_thumbnail(img):
 
     return {
         "uri": url_for("thumbnail", uuid=uuid),
-        "details": url_for("picture", uuid=uuid)
+        "details": url_for("details", uuid=uuid)
     }
 
 
