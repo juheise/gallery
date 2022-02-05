@@ -27,6 +27,8 @@ def picture_details(uuid):
 
     pic = db.load(uuid)
     pic["pic_url"] = flask.url_for("picture", uuid=uuid)
+    pic["set_tags"] = flask.url_for("set_tags", uuid=uuid)
+    pic["tags"] = ", ".join([db.load_tag_by_id(tag["tag_id"])["tag"] for tag in db.load_image_tags(pic["id"])])
 
     for key in EXCLUDE_ATTRIBUTES:
         pic.pop(key, None)
@@ -43,3 +45,27 @@ def picture_details(uuid):
             continue
 
     return pic
+
+
+def replace_tags(uuid: str, tags: str):
+
+    tags = tags.split(",")
+    valid_tags = []
+    for tag in tags:
+        if not tag.strip():
+            continue
+        valid_tags.append(tag)
+
+    pic = load_picture(uuid)
+    pic_id = pic["id"]
+    new_tags = [db.load_tag(tag.strip(), create=True) for tag in valid_tags]
+    current_tags = [db.load_tag_by_id(tag["tag_id"]) for tag in db.load_image_tags(pic_id)]
+
+    for tag in current_tags:
+        if tag not in new_tags:
+            db.remove_image_tag(pic_id, tag["id"])
+
+    for tag in new_tags:
+        if tag in current_tags:
+            continue
+        db.set_image_tag(pic_id, tag["id"])

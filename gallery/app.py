@@ -1,7 +1,8 @@
+from typing import Sequence
 import flask
 
 from gallery.views.browse import fetch_thumbnails
-from gallery.views.details import load_picture, picture_details
+from gallery.views.details import load_picture, picture_details, replace_tags
 
 
 app = flask.Flask(__name__)
@@ -32,5 +33,17 @@ def thumbnail(uuid):
 @app.route("/pictures/<uuid>/details")
 def details(uuid):
     pic = picture_details(uuid)
-    pic_url = pic.pop("pic_url")
-    return flask.render_template("details.html", pic=pic, pic_url=pic_url)
+    return flask.render_template("details.html", **{
+        "pic": pic,
+        "pic_url": pic.pop("pic_url"),
+        "set_tags_url": pic.pop("set_tags"),
+        "uuid": uuid,
+        "tags": pic.pop("tags")
+    })
+
+
+@app.route("/pictures/<uuid>/tags", methods=["POST"])
+def set_tags(uuid: str):
+    data = flask.request.form
+    replace_tags(uuid, data["tags"])
+    return flask.redirect(flask.url_for("details", uuid=uuid))

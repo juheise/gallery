@@ -15,6 +15,20 @@
                             <td>{{ value }}</td>
                         </tr>
                         {% endfor %}
+                        <tr>
+                            <th scope="row">Tags</th>
+                            <td>
+                                <form action="{{ set_tags_url }}" method="post">
+                                    <div class="input-group mb-3">
+                                        <input type="text" name="uuid" hidden="true" value="{{ uuid }}">
+                                        <input type="text" name="tags" class="form-control" value="{{ tags }}">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="submit">Ok</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
