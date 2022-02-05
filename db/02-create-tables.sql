@@ -20,7 +20,7 @@ create table if not exists gallery.tags (
 
 
 create table if not exists gallery.tags_images_assoc (
-    tag_id integer references tags(id),
-    image_id integer references images(id),
+    tag_id integer references gallery.tags(id),
+    image_id integer references gallery.images(id),
     primary key (tag_id, image_id)
 );

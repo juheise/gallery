@@ -7,6 +7,40 @@ DB_CONNECTION = {
 }
 
 
+def configure(connection):
+    global DB_CONNECTION
+    DB_CONNECTION = connection
+
+
+def _exec_from_file(path: str) -> None:
+    with open(path) as f:
+        statements = f.read()
+    _exec_update(statements)
+
+
+def _fetch_one(statement, args=None):
+    with psycopg2.connect(**DB_CONNECTION) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(statement, args)
+            return cursor.fetchall()
+
+
+def _exec_update(statement):
+    with psycopg2.connect(**DB_CONNECTION) as connection:
+        connection.set_session(readonly=False, autocommit=True)
+        with connection.cursor() as cursor:
+            cursor.execute(statement)
+            connection.commit()
+
+
+def initialize():
+    _exec_from_file("db/01-create-schema.sql")
+    _exec_from_file("db/02-create-tables.sql")
+    _exec_update("delete from gallery.tags_images_assoc")
+    _exec_update("delete from gallery.tags")
+    _exec_update("delete from gallery.images")
+
+
 def insert(entry):
 
     keys = str.join(", ", entry.keys())
@@ -15,7 +49,7 @@ def insert(entry):
     with psycopg2.connect(**DB_CONNECTION) as connection:
         with connection.cursor() as cursor:
             cursor.execute(
-                f"insert into images ({keys}) values ({values})",
+                f"insert into gallery.images ({keys}) values ({values})",
                 entry
             )
             connection.commit()
@@ -24,8 +58,7 @@ def insert(entry):
 def search(order_by="shot_datetime", order="desc"):
     with psycopg2.connect(**DB_CONNECTION) as connection:
         with connection.cursor() as cursor:
-
-            cursor.execute(f"select * from images order by {order_by} {order}")
+            cursor.execute(f"select * from gallery.images order by {order_by} {order}")
             result = cursor.fetchall()
             keys = [col.name for col in cursor.description]
 
@@ -42,7 +75,7 @@ def search(order_by="shot_datetime", order="desc"):
 def load(uuid: str):
     with psycopg2.connect(**DB_CONNECTION) as connection:
         with connection.cursor() as cursor:
-            cursor.execute("select * from images where uuid=%s", (uuid,))
+            cursor.execute("select * from gallery.images where uuid=%s", (uuid,))
             result = cursor.fetchone()
             keys = [col.name for col in cursor.description]
         
@@ -57,14 +90,14 @@ def remove_image_tag(pic_id: int, tag_id: int):
     with psycopg2.connect(**DB_CONNECTION) as connection:
         with connection.cursor() as cursor:
             cursor.execute(
-                "delete from tags_images_assoc where image_id=%s and tag_id=%s",
+                "delete from gallery.tags_images_assoc where image_id=%s and tag_id=%s",
                 (pic_id, tag_id)
             )
             connection.commit()
-            cursor.execute("select * from tags_images_assoc where tag_id=%s", (tag_id,))
+            cursor.execute("select * from gallery.tags_images_assoc where tag_id=%s", (tag_id,))
             result = cursor.fetchone()
             if result is None:
-                cursor.execute("delete from tags where id=%s", (tag_id,))
+                cursor.execute("delete from gallery.tags where id=%s", (tag_id,))
                 connection.commit()
 
 
@@ -72,7 +105,7 @@ def set_image_tag(pic_id: int, tag_id: int):
     with psycopg2.connect(**DB_CONNECTION) as connection:
         with connection.cursor() as cursor:
             cursor.execute(
-                "insert into tags_images_assoc values (%s, %s)",
+                "insert into gallery.tags_images_assoc values (%s, %s)",
                 (tag_id, pic_id)
             )
             connection.commit()
@@ -81,14 +114,14 @@ def set_image_tag(pic_id: int, tag_id: int):
 def insert_tag(tag: str):
     with psycopg2.connect(**DB_CONNECTION) as connection:
         with connection.cursor() as cursor:
-            cursor.execute("insert into tags (tag) values (%s)", (tag,))
+            cursor.execute("insert into gallery.tags (tag) values (%s)", (tag,))
             connection.commit()
 
 
 def load_tag(tag: str, create: bool=False):
     with psycopg2.connect(**DB_CONNECTION) as connection:
         with connection.cursor() as cursor:
-            cursor.execute("select * from tags where tag=%s", (tag,))
+            cursor.execute("select * from gallery.tags where tag=%s", (tag,))
             result = cursor.fetchone()
             keys = [col.name for col in cursor.description]
     
@@ -106,7 +139,7 @@ def load_tag(tag: str, create: bool=False):
 def load_tag_by_id(id_: int):
     with psycopg2.connect(**DB_CONNECTION) as connection:
         with connection.cursor() as cursor:
-            cursor.execute("select * from tags where id=%s", (id_,))
+            cursor.execute("select * from gallery.tags where id=%s", (id_,))
             result = cursor.fetchone()
             keys = [col.name for col in cursor.description]
     
@@ -123,7 +156,7 @@ def load_tag_by_id(id_: int):
 def load_image_tags(pic_id: int):
     with psycopg2.connect(**DB_CONNECTION) as connection:
         with connection.cursor() as cursor:
-            cursor.execute("select * from tags_images_assoc where image_id=%s", (pic_id,))
+            cursor.execute("select * from gallery.tags_images_assoc where image_id=%s", (pic_id,))
             result = cursor.fetchall()
             keys = [col.name for col in cursor.description]
 
