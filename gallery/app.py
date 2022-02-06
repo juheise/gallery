@@ -1,10 +1,12 @@
 from typing import Sequence
 import flask
 
+from db import persistence as db
 from gallery.views.browse import fetch_thumbnails
 from gallery.views.details import load_picture, picture_details, replace_tags
 
 
+db.initialize()
 app = flask.Flask(__name__)
 
 

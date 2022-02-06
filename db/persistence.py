@@ -33,9 +33,14 @@ def _exec_update(statement):
             connection.commit()
 
 
-def initialize():
+def initialize(force_clean=False):
+
     _exec_from_file("db/01-create-schema.sql")
     _exec_from_file("db/02-create-tables.sql")
+
+    if not force_clean:
+        return
+        
     _exec_update("delete from gallery.tags_images_assoc")
     _exec_update("delete from gallery.tags")
     _exec_update("delete from gallery.images")
@@ -139,27 +144,15 @@ def load_tag(tag: str, create: bool=False):
     return obj
 
 
-def load_tag_by_id(id_: int):
-    with psycopg2.connect(**DB_CONNECTION) as connection:
-        with connection.cursor() as cursor:
-            cursor.execute("select * from gallery.tags where id=%s", (id_,))
-            result = cursor.fetchone()
-            keys = [col.name for col in cursor.description]
-    
-    if result is None:
-        raise ValueError(f"tag with id={id_} does not exist")
-
-    obj = {}
-    for i in range(len(keys)):
-        obj[keys[i]] = result[i]
-    
-    return obj
-
-
 def load_image_tags(pic_id: int):
     with psycopg2.connect(**DB_CONNECTION) as connection:
         with connection.cursor() as cursor:
-            cursor.execute("select * from gallery.tags_images_assoc where image_id=%s", (pic_id,))
+            cursor.execute(
+                "select t.tag as tag, t.id as id from gallery.tags as t "
+                "join gallery.tags_images_assoc as a on a.tag_id=t.id "
+                "where a.image_id=%s", 
+                (pic_id,)
+            )
             result = cursor.fetchall()
             keys = [col.name for col in cursor.description]
 
