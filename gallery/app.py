@@ -1,7 +1,7 @@
 import flask
 
 from db import persistence as db
-from gallery.views.browse import fetch_thumbnails
+from gallery.views.browse import fetch_thumbnails, Pagination
 from gallery.views.details import load_picture, picture_details, replace_tags
 
 
@@ -14,9 +14,17 @@ def root():
     return flask.redirect("/pictures")
 
 
-@app.route("/pictures")
+@app.route("/pictures", methods=["GET"])
 def browse():
-    return flask.render_template("browse.html", sections=fetch_thumbnails())
+    
+    args = flask.request.args
+    offset = int(args.get("offset", 0))
+    limit = int(args.get("limit", 100))
+    return flask.render_template(
+        "browse.html",
+        sections=fetch_thumbnails(offset, limit),
+        pagination=Pagination(offset, limit)
+    )
 
 
 @app.route("/pictures/<uuid>")

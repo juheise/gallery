@@ -1,4 +1,3 @@
-from datetime import datetime
 from flask import url_for
 
 import db.persistence as db
@@ -29,9 +28,9 @@ def process_thumbnail(img):
     }
 
 
-def fetch_thumbnails():
+def fetch_thumbnails(offset: int, limit: int):
 
-    images = db.search()
+    images = db.search(offset=offset, limit=limit)
     sections = []
     current_month = None
 
@@ -44,3 +43,9 @@ def fetch_thumbnails():
         sections[-1]["thumbnails"].append(process_thumbnail(img))
 
     return sections
+
+
+class Pagination:
+    def __init__(self, offset: int, limit: int):
+        self.next = url_for("browse", offset=offset+limit, limit=limit)
+        self.prev = url_for("browse", offset=max(offset-limit, 0), limit=limit)

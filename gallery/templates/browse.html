@@ -11,4 +11,8 @@
         {% endfor %}
     </div>
     {% endfor %}
+    <div class="container">
+        <a class="btn btn-secondary" href="{{ pagination.prev }}">Zur&uuml;ck</a>
+        <a class="btn btn-secondary" href="{{ pagination.next }}">Weiter</a>
+    </div>
 {% endblock %}
