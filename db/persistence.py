@@ -22,7 +22,7 @@ def _fetch_one(statement, args=None):
     with psycopg2.connect(**DB_CONNECTION) as connection:
         with connection.cursor() as cursor:
             cursor.execute(statement, args)
-            return cursor.fetchall()
+            return cursor.fetchone()
 
 
 def _exec_update(statement):
@@ -125,9 +125,12 @@ def load_tag(tag: str, create: bool=False):
             result = cursor.fetchone()
             keys = [col.name for col in cursor.description]
     
-    if result is None and create:
-        insert_tag(tag)
-        return load_tag(tag)
+    if result is None:
+        if create:
+            insert_tag(tag)
+            return load_tag(tag)
+        else:
+            return None
 
     obj = {}
     for i in range(len(keys)):
