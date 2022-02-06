@@ -1,4 +1,3 @@
-from typing import Sequence
 import flask
 
 from db import persistence as db
