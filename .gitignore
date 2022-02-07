@@ -4,3 +4,4 @@ __pycache__
 .pytest_cache
 gallery/static/pictures
 gallery/static/thumbnails
+dist
