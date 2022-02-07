@@ -20,10 +20,12 @@ def browse():
     args = flask.request.args
     offset = int(args.get("offset", 0))
     limit = int(args.get("limit", 100))
+    order_by = args.get("order_by", "shot_datetime")
+    order = args.get("order", "desc")
     return flask.render_template(
         "browse.html",
-        sections=fetch_thumbnails(offset, limit),
-        pagination=Pagination(offset, limit)
+        sections=fetch_thumbnails(offset, limit, order_by, order),
+        pagination=Pagination(offset, limit, order_by, order)
     )
 
 

@@ -1,5 +1,24 @@
 {% extends "page_template.html" %}
-{% block title %}Übersicht{% endblock %}
+{% block title %}&Uuml;bersicht{% endblock %}
+{% block navigation %}
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Sortieren
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li>
+                <a class="dropdown-item" href="{{ pagination.order_date_desc }}">
+                    Neueste Fotos zuerst
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="{{ pagination.order_date_asc }}">
+                    &Auml;lteste Fotos zuerst
+                </a>
+            </li>
+        </ul>
+    </li>
+{% endblock %}
 {% block content %}
     {% for section in sections %}
     <div class="container">

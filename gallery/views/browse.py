@@ -28,9 +28,9 @@ def process_thumbnail(img):
     }
 
 
-def fetch_thumbnails(offset: int, limit: int):
+def fetch_thumbnails(offset: int, limit: int, order_by: str, order: str):
 
-    images = db.search(offset=offset, limit=limit)
+    images = db.search(offset=offset, limit=limit, order_by=order_by, order=order)
     sections = []
     current_month = None
 
@@ -46,6 +46,8 @@ def fetch_thumbnails(offset: int, limit: int):
 
 
 class Pagination:
-    def __init__(self, offset: int, limit: int):
-        self.next = url_for("browse", offset=offset+limit, limit=limit)
-        self.prev = url_for("browse", offset=max(offset-limit, 0), limit=limit)
+    def __init__(self, offset: int, limit: int, order_by: str, order: str):
+        self.next = url_for("browse", offset=offset+limit, limit=limit, order_by=order_by, order=order)
+        self.prev = url_for("browse", offset=max(offset-limit, 0), limit=limit, order_by=order_by, order=order)
+        self.order_date_asc = url_for("browse", offset=0, limit=limit, order_by="shot_datetime", order="asc")
+        self.order_date_desc = url_for("browse", offset=0, limit=limit, order_by="shot_datetime", order="desc")
