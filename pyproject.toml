@@ -3,6 +3,8 @@ name = "gallery"
 version = "1.0.0"
 description = "picture gallery"
 authors = ["Julian Heise <jam.heise@gmail.com>"]
+exclude = [".env", "test"]
+
 
 [tool.poetry.dependencies]
 python = "^3.9"
