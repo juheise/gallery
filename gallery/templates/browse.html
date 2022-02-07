@@ -20,12 +20,12 @@
     </li>
 {% endblock %}
 {% block content %}
-    {% for section in sections %}
+    {% for section in thumbnails.sections %}
     <div class="container">
         <h1>{{ section["headline"] }}</h1>
         {% for image in section.thumbnails %}
-            <a href="{{ image['details'] }}" class="thumbnail-href">
-                <img class="rounded thumbnail" src="{{ image['uri'] }}" width="128" height="128"/>
+            <a href="{{ image.details }}" class="thumbnail-href">
+                <img class="rounded thumbnail" src="{{ image.uri }}" width="128" height="128"/>
             </a>
         {% endfor %}
     </div>

@@ -1,7 +1,7 @@
 import flask
 
 from db import persistence as db
-from gallery.views.browse import fetch_thumbnails, Pagination
+from gallery.views.browse import Thumbnails, Pagination
 from gallery.views.details import load_picture, picture_details, replace_tags
 
 
@@ -24,7 +24,7 @@ def browse():
     order = args.get("order", "desc")
     return flask.render_template(
         "browse.html",
-        sections=fetch_thumbnails(offset, limit, order_by, order),
+        thumbnails=Thumbnails(offset, limit, order_by, order),
         pagination=Pagination(offset, limit, order_by, order)
     )
 

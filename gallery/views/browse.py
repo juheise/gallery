@@ -18,7 +18,7 @@ MONTH_NAMES = {
 }
 
 
-def process_thumbnail(img):
+def _process_thumbnail(img):
     
     uuid = img["uuid"]
 
@@ -28,21 +28,21 @@ def process_thumbnail(img):
     }
 
 
-def fetch_thumbnails(offset: int, limit: int, order_by: str, order: str):
+class Thumbnails:
 
-    images = db.search(offset=offset, limit=limit, order_by=order_by, order=order)
-    sections = []
-    current_month = None
+    def __init__(self, offset: int, limit: int, order_by: str, order: str):
 
-    for img in images:
-        dt = img["shot_datetime"]
-        this_month = dt.month
-        if this_month != current_month:
-            sections.append({"headline": f"{MONTH_NAMES[dt.month]} {dt.year}", "thumbnails": []})
-            current_month = this_month
-        sections[-1]["thumbnails"].append(process_thumbnail(img))
+        images = db.search(offset=offset, limit=limit, order_by=order_by, order=order)
+        self.sections = []
+        current_month = None
 
-    return sections
+        for img in images:
+            dt = img["shot_datetime"]
+            this_month = dt.month
+            if this_month != current_month:
+                self.sections.append({"headline": f"{MONTH_NAMES[dt.month]} {dt.year}", "thumbnails": []})
+                current_month = this_month
+            self.sections[-1]["thumbnails"].append(_process_thumbnail(img))
 
 
 class Pagination:
