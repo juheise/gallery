@@ -5,6 +5,7 @@ from gallery.views.browse import Thumbnails, Pagination
 from gallery.views.details import load_picture, picture_details, replace_tags
 
 
+db.configure_from_env()
 db.initialize()
 app = flask.Flask(__name__)
 

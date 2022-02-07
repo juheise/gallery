@@ -1,10 +1,22 @@
+import os
+
 import psycopg2
 
 
 DB_CONNECTION = {
     "dbname": "gallery",
-    "user": "juheise"
+    "user": "gallery"
 }
+
+
+def configure_from_env():
+    global DB_CONNECTION
+    dbname = os.getenv("GALLERY_DB_NAME")
+    username = os.getenv("GALLERY_DB_USER")
+    if dbname:
+        DB_CONNECTION["dbname"] = dbname
+    if username:
+        DB_CONNECTION["user"] = username
 
 
 def configure(connection):
