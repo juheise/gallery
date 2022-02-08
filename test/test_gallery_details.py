@@ -1,4 +1,4 @@
-import db.persistence as db
+import gallery.db.persistence as db
 from test.conftest import init_db_for_test
 import gallery.views.details as details
 

@@ -1,6 +1,6 @@
 import pytest
 
-from db import persistence as db
+from gallery.db import persistence as db
 from test.conftest import init_db_for_test
 
 

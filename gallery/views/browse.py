@@ -1,6 +1,6 @@
 from flask import url_for
 
-import db.persistence as db
+import gallery.db.persistence as db
 
 MONTH_NAMES = {
     1: "Januar",

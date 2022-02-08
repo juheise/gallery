@@ -1,6 +1,6 @@
 import flask
 
-import db.persistence as db
+import gallery.db.persistence as db
 
 
 EXCLUDE_ATTRIBUTES = {"id", "uuid", "abspath", "file_name", "thumbnail", "hash_hex", "hash_algo"}

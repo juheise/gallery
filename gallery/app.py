@@ -1,6 +1,6 @@
 import flask
 
-from db import persistence as db
+from gallery.db import persistence as db
 from gallery.views.browse import Thumbnails, Pagination
 from gallery.views.details import load_picture, picture_details, replace_tags
 

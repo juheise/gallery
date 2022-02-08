@@ -1,4 +1,4 @@
-from db import persistence as db
+from gallery.db import persistence as db
 
 
 def init_db_for_test():

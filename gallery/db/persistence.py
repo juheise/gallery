@@ -47,8 +47,8 @@ def _exec_update(statement):
 
 def initialize(force_clean=False):
 
-    _exec_from_file("db/01-create-schema.sql")
-    _exec_from_file("db/02-create-tables.sql")
+    _exec_from_file("gallery/db/01-create-schema.sql")
+    _exec_from_file("gallery/db/02-create-tables.sql")
 
     if not force_clean:
         return

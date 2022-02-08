@@ -7,7 +7,7 @@ from PIL import Image
 import exif
 from fs.base import FS
 
-import db.persistence as db
+import gallery.db.persistence as db
 
 
 def convert_exif_date_to_sql_date(dt):

@@ -1,9 +1,8 @@
 [tool.poetry]
 name = "gallery"
-version = "1.0.0"
+version = "1.0.1"
 description = "picture gallery"
 authors = ["Julian Heise <jam.heise@gmail.com>"]
-exclude = [".env", "test"]
 
 
 [tool.poetry.dependencies]
@@ -25,4 +24,4 @@ build-backend = "poetry.core.masonry.api"
 
 
 [tool.poetry.scripts]
-ingest = "ingestion.cli:ingest"
+ingest = "gallery.ingestion.cli:ingest"

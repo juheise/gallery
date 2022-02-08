@@ -1,11 +1,7 @@
-from os import environ
-import os
-import sys
-
 from fs.osfs import OSFS
 import click
 
-from ingestion.ingest import import_image
+from ..ingestion.ingest import import_image
 
 
 PREFIX = "GALLERY"
