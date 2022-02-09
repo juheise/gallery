@@ -1,3 +1,3 @@
 #!/bin/bash
 
-uwsgi gallery-uwsgi.ini
+uwsgi "$GALLERY_CONF_DIR/gallery-uwsgi.ini"
