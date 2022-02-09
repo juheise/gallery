@@ -1,4 +1,5 @@
 import os
+import importlib.resources as res
 
 import psycopg2
 
@@ -8,12 +9,10 @@ DB_CONNECTION = {
     "user": "gallery"
 }
 
-GALLERY_HOME = "./"
-
 
 def configure_from_env():
     
-    global DB_CONNECTION, GALLERY_HOME
+    global DB_CONNECTION
     
     dbname = os.getenv("GALLERY_DB_NAME")
     if dbname:
@@ -22,10 +21,6 @@ def configure_from_env():
     username = os.getenv("GALLERY_DB_USER")
     if username:
         DB_CONNECTION["user"] = username
-    
-    gallery_home = os.getenv("GALLERY_HOME")
-    if gallery_home:
-        GALLERY_HOME = gallery_home if not gallery_home.endswith("/") else gallery_home[:-1]
 
 
 def configure(connection):
@@ -56,8 +51,8 @@ def _exec_update(statement):
 
 def initialize(force_clean: bool = False):
 
-    _exec_from_file(f"{GALLERY_HOME}/gallery/db/01-create-schema.sql")
-    _exec_from_file(f"{GALLERY_HOME}/gallery/db/02-create-tables.sql")
+    _exec_update(res.read_text("gallery.db", "01-create-schema.sql"))
+    _exec_update(res.read_text("gallery.db", "02-create-tables.sql"))
 
     if not force_clean:
         return
