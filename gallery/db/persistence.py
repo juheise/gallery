@@ -8,15 +8,24 @@ DB_CONNECTION = {
     "user": "gallery"
 }
 
+GALLERY_HOME = "./"
+
 
 def configure_from_env():
-    global DB_CONNECTION
+    
+    global DB_CONNECTION, GALLERY_HOME
+    
     dbname = os.getenv("GALLERY_DB_NAME")
-    username = os.getenv("GALLERY_DB_USER")
     if dbname:
         DB_CONNECTION["dbname"] = dbname
+    
+    username = os.getenv("GALLERY_DB_USER")
     if username:
         DB_CONNECTION["user"] = username
+    
+    gallery_home = os.getenv("GALLERY_HOME")
+    if gallery_home:
+        GALLERY_HOME = gallery_home if not gallery_home.endswith("/") else gallery_home[:-1]
 
 
 def configure(connection):
@@ -45,10 +54,10 @@ def _exec_update(statement):
             connection.commit()
 
 
-def initialize(force_clean=False):
+def initialize(force_clean: bool = False):
 
-    _exec_from_file("gallery/db/01-create-schema.sql")
-    _exec_from_file("gallery/db/02-create-tables.sql")
+    _exec_from_file(f"{GALLERY_HOME}/gallery/db/01-create-schema.sql")
+    _exec_from_file(f"{GALLERY_HOME}/gallery/db/02-create-tables.sql")
 
     if not force_clean:
         return
