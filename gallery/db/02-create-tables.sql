@@ -6,7 +6,7 @@ create table if not exists gallery.images (
     thumbnail text not null,
     width_px integer not null,
     height_px integer not null,
-    shot_datetime timestamp without time zone,
+    shot_datetime timestamp without time zone not null,
     camera text,
     hash_hex text unique,
     hash_algo text
