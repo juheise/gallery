@@ -1,12 +1,12 @@
 {% extends "page_template.html" %}
 {% block title %}Details{% endblock %}
 {% block content %}
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-8">
+            <div class="col-lg-8">
                 <img class="img-fluid" src="{{ pic_url }}">
             </div>
-            <div class="col-4">
+            <div class="col-lg-4">
                 <table class="table table-striped">
                     <tbody>
                         {% for key, value in pic.items() %}
