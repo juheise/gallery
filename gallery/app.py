@@ -1,7 +1,9 @@
+from datetime import datetime
+
 import flask
 
 from gallery.db import persistence as db
-from gallery.views.browse import Thumbnails, Pagination
+from gallery.views.browse import Thumbnails
 from gallery.views.details import load_picture, picture_details, replace_tags
 
 
@@ -17,16 +19,23 @@ def root():
 
 @app.route("/pictures", methods=["GET"])
 def browse():
-    
+
+    def optional_date_param(key):
+        value = args.get(key, None)
+        if not value:
+            return None
+        return datetime.strptime(value, "%Y-%m-%d")
+
     args = flask.request.args
     offset = int(args.get("offset", 0))
     limit = int(args.get("limit", 100))
     order_by = args.get("order_by", "shot_datetime")
     order = args.get("order", "desc")
+    start_date = optional_date_param("start_date")
+    end_date = optional_date_param("end_date")
     return flask.render_template(
         "browse.html",
-        thumbnails=Thumbnails(offset, limit, order_by, order),
-        pagination=Pagination(offset, limit, order_by, order)
+        thumbnails=Thumbnails(offset, limit, order_by, order, start_date, end_date)
     )
 
 

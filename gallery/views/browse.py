@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import url_for
 
 import gallery.db.persistence as db
@@ -30,9 +32,17 @@ def _process_thumbnail(img):
 
 class Thumbnails:
 
-    def __init__(self, offset: int, limit: int, order_by: str, order: str):
-
-        images = db.search(offset=offset, limit=limit, order_by=order_by, order=order)
+    def __init__(
+        self, offset: int, limit: int, order_by: str, order: str, start_date: datetime, end_date: datetime
+    ):
+        images = db.search(
+            offset=offset,
+            limit=limit,
+            order_by=order_by,
+            order=order,
+            start_date=start_date,
+            end_date=end_date
+        )
         self.sections = []
         current_month = None
 
@@ -43,11 +53,3 @@ class Thumbnails:
                 self.sections.append({"headline": f"{MONTH_NAMES[dt.month]} {dt.year}", "thumbnails": []})
                 current_month = this_month
             self.sections[-1]["thumbnails"].append(_process_thumbnail(img))
-
-
-class Pagination:
-    def __init__(self, offset: int, limit: int, order_by: str, order: str):
-        self.next = url_for("browse", offset=offset+limit, limit=limit, order_by=order_by, order=order)
-        self.prev = url_for("browse", offset=max(offset-limit, 0), limit=limit, order_by=order_by, order=order)
-        self.order_date_asc = url_for("browse", offset=0, limit=limit, order_by="shot_datetime", order="asc")
-        self.order_date_desc = url_for("browse", offset=0, limit=limit, order_by="shot_datetime", order="desc")

@@ -2,22 +2,65 @@
 {% block title %}&Uuml;bersicht{% endblock %}
 {% block navigation %}
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Sortieren
+        <a class="nav-link dropdown-toggle" href="#" id="nav_browse_sort" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Reihenfolge
         </a>
-        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <ul class="dropdown-menu" aria-labelledby="nav_browse_sort">
             <li>
-                <a class="dropdown-item" href="{{ pagination.order_date_desc }}">
+                <a class="dropdown-item" onclick="orderDateDesc()" href="#">
                     Neueste Fotos zuerst
                 </a>
             </li>
             <li>
-                <a class="dropdown-item" href="{{ pagination.order_date_asc }}">
+                <a class="dropdown-item" onclick="orderDateAsc()" href="#">
                     &Auml;lteste Fotos zuerst
                 </a>
             </li>
         </ul>
     </li>
+
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="nav_browse_date" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Datum
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="nav_browse_date">
+            <li>
+                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#select_date_range">
+                    Datumsbereich festlegen...
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="#">
+                    W&auml;hle Monat und Jahr...
+                </a>
+            </li>
+        </ul>
+    </li>
+
+<!-- todo: tags filter
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="nav_browse_tags" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Tags
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="nav_browse_tags">
+            <li>
+                <a class="dropdown-item" href="#">
+                    xxx
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="#">
+                    yyy
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="#">
+                    zzz
+                </a>
+            </li>
+        </ul>
+    </li>
+-->
 {% endblock %}
 {% block content %}
     {% for section in thumbnails.sections %}
@@ -31,7 +74,40 @@
     </div>
     {% endfor %}
     <div class="container">
-        <a class="btn btn-secondary" href="{{ pagination.prev }}">Zur&uuml;ck</a>
-        <a class="btn btn-secondary" href="{{ pagination.next }}">Weiter</a>
+        <button class="btn btn-secondary" onclick="prevPage()">Zur&uuml;ck</button>
+        <button class="btn btn-secondary" onclick="nextPage()">Weiter</button>
     </div>
+
+    <!-- select period modal -->
+    <div class="modal fade" id="select_date_range" tabindex="-1" aria-labelledby="select_date_range_label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="select_date_range_label">Datumsbereich festlegen</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <label for="start_date">Startdatum</label>
+                            <input name="start_date" id="start_date" class="form-control form-control-sm" type="date"/>
+                        </div>
+                        <div class="row">
+                            <label for="end_date">Enddatum</label>
+                            <input name="end_date" id="end_date" class="form-control form-control-sm" type="date">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                    <button id="apply_date_range" type="button" class="btn btn-primary" onclick="applyDateFilter()">
+                        &Uuml;bernehmen
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+<script src="/static/js/browse.js"></script>
 {% endblock %}

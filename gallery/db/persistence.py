@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import importlib.resources as res
 
@@ -76,11 +77,39 @@ def insert(entry):
             connection.commit()
 
 
-def search(order_by: str = "shot_datetime", order: str = "desc", offset: int = 0, limit: int = 100):
+def search(
+    order_by: str, order: str, offset: int, limit: int, start_date: datetime, end_date: datetime
+):
+    if str.lower(order) not in ["asc", "desc"]:
+        raise ValueError(f"order must be one of ['asc', 'desc'], not '{order}'")
+
+    query_params = []
+    date_query = []
+    if start_date:
+        query_params.append(start_date)
+        date_query.append("shot_datetime >= %s")
+    if end_date:
+        query_params.append(end_date)
+        if date_query:
+            date_query.append(" and ")
+        date_query.append("shot_datetime <= %s")
+    if date_query:
+        date_query.insert(0, "where ")
+        date_query.append(" ")
+    date_query = "".join(date_query)
+
     with psycopg2.connect(**DB_CONNECTION) as connection:
         with connection.cursor() as cursor:
-            # todo ensure sanitized arguments
-            cursor.execute(f"select * from gallery.images order by {order_by} {order} limit {limit} offset {offset}")
+
+            order_by = psycopg2.extensions.quote_ident(order_by, cursor)
+            offset = int(offset)
+            limit = int(limit)
+
+            cursor.execute(
+                f"select * from gallery.images {date_query}order by {order_by} {order} limit {limit} offset {offset}",
+                query_params
+            )
+
             result = cursor.fetchall()
             keys = [col.name for col in cursor.description]
 
