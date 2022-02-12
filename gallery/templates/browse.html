@@ -29,38 +29,9 @@
                     Datumsbereich festlegen...
                 </a>
             </li>
-            <li>
-                <a class="dropdown-item" href="#">
-                    W&auml;hle Monat und Jahr...
-                </a>
-            </li>
         </ul>
     </li>
 
-<!-- todo: tags filter
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="nav_browse_tags" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Tags
-        </a>
-        <ul class="dropdown-menu" aria-labelledby="nav_browse_tags">
-            <li>
-                <a class="dropdown-item" href="#">
-                    xxx
-                </a>
-            </li>
-            <li>
-                <a class="dropdown-item" href="#">
-                    yyy
-                </a>
-            </li>
-            <li>
-                <a class="dropdown-item" href="#">
-                    zzz
-                </a>
-            </li>
-        </ul>
-    </li>
--->
 {% endblock %}
 {% block content %}
     {% for section in thumbnails.sections %}
@@ -78,7 +49,7 @@
         <button class="btn btn-secondary" onclick="nextPage()">Weiter</button>
     </div>
 
-    <!-- select period modal -->
+    <!-- select date range modal -->
     <div class="modal fade" id="select_date_range" tabindex="-1" aria-labelledby="select_date_range_label" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
