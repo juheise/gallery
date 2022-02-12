@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gallery"
-version = "1.0.5"
+version = "1.0.6"
 description = "picture gallery"
 authors = ["Julian Heise <jam.heise@gmail.com>"]
 
