@@ -75,3 +75,11 @@ function orderDateDesc() {
     params.offset = 0;
     window.location.search = params.toQueryString();
 }
+
+document.addEventListener("DOMContentLoaded", function(event) { 
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+        get: (searchParams, prop) => searchParams.get(prop),
+    });
+    document.getElementById("start_date").value = params.start_date;
+    document.getElementById("end_date").value = params.end_date;
+});
