@@ -4,13 +4,13 @@
 
 Create directory for the share
 ```
-sudo mkdir -p /mnt/mycloudex2ultra/bilder
+sudo mkdir -p /mnt/my-server/pictures
 ```
 
 `/etc/fstab` entry:
 
 ```
-//mycloudex2ultra/Bilder  /mnt/mycloudex2ultra/bilder  cifs  uid=gallery,credentials=/home/juheise/.smbcredentials,iocharset=utf8 0 0
+//mycloudex2ultra/Bilder  /mnt/my-server/pictures  cifs  uid=gallery,credentials=/home/gallery/.smbcredentials,iocharset=utf8 0 0
 ```
 
 Perform mount (one-time only, should auto-mount after reboot):
@@ -24,8 +24,8 @@ sudo mount -a
 ### Create Database
 
 ```
-juheise@ubuntu:~$ sudo su postgres
-postgres@ubuntu:/home/juheise$ psql
+gallery@ubuntu:~$ sudo su postgres
+postgres@ubuntu:/home/gallery$ psql
 psql (13.5 (Ubuntu 13.5-0ubuntu0.21.04.1))
 Type "help" for help.
 
